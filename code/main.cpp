@@ -47,13 +47,15 @@ int main() {
         // Write the encrypted result to the destination file
         writeFile(destFile, result);
 
-        // Delete the original CYPHER.txt file
-        if (std::remove(sourceFile.c_str()) != 0) {
-            throw std::runtime_error("Error: Could not delete the file '" + sourceFile + "'.");
+        // Empty the content of the original CYPHER.txt file (but keep the file)
+        std::ofstream emptyFile(sourceFile, std::ios::out | std::ios::trunc);
+        if (!emptyFile) {
+            throw std::runtime_error("Error: Could not open the file '" + sourceFile + "' to clear its content.");
         }
+        emptyFile.close(); // Close the file after truncating
 
         std::cout << "Operation successful! Encrypted result saved to: " << destFile << std::endl;
-        std::cout << "File '" << sourceFile << "' has been deleted." << std::endl;
+        std::cout << "File '" << sourceFile << "' has been emptied." << std::endl;
 
     } catch (const std::exception& e) {
         std::cerr << e.what() << std::endl;
